@@ -1,0 +1,42 @@
+﻿@model Pharmacy.Expence
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Expence</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DateOfSale)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateOfSale)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Count)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Count)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SellingPrice)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SellingPrice)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Medicament)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Medicament.Annotation)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ExpenseId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

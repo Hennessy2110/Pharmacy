@@ -1,0 +1,48 @@
+﻿@model Pharmacy.Arrival
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Arrival</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceiptDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReceiptDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Count)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Count)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchasePrice)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PurchasePrice)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Deliver)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Deliver.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Medicament)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Medicament.Annotation)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ArrivalId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

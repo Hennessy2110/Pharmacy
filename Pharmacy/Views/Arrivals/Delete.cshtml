@@ -1,0 +1,51 @@
+﻿@model Pharmacy.Arrival
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Arrival</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceiptDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReceiptDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Count)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Count)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchasePrice)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PurchasePrice)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Deliver)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Deliver.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Medicament)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Medicament.Annotation)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ArrivalId" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
