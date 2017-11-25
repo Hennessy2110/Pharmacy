@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pharmacy;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pharmacy.Controllers
 {
@@ -18,12 +19,14 @@ namespace Pharmacy.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "user, admin")]
         // GET: Medicaments
         public async Task<IActionResult> Index()
         {
             return View(await _context.Medicaments.ToListAsync());
         }
 
+        [Authorize(Roles = "user, admin")]
         // GET: Medicaments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -42,12 +45,14 @@ namespace Pharmacy.Controllers
             return View(medicaments);
         }
 
+        [Authorize(Roles = "user, admin")]
         // GET: Medicaments/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = "user, admin")]
         // POST: Medicaments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -64,6 +69,7 @@ namespace Pharmacy.Controllers
             return View(medicaments);
         }
 
+        [Authorize(Roles = "admin")]
         // GET: Medicaments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -80,6 +86,7 @@ namespace Pharmacy.Controllers
             return View(medicaments);
         }
 
+        [Authorize(Roles = "admin")]
         // POST: Medicaments/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -115,6 +122,7 @@ namespace Pharmacy.Controllers
             return View(medicaments);
         }
 
+        [Authorize(Roles = "admin")]
         // GET: Medicaments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -133,6 +141,7 @@ namespace Pharmacy.Controllers
             return View(medicaments);
         }
 
+        [Authorize(Roles = "admin")]
         // POST: Medicaments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

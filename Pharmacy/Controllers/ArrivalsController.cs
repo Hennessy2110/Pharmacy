@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pharmacy;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pharmacy.Controllers
 {
@@ -18,6 +19,7 @@ namespace Pharmacy.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "user, admin")]
         // GET: Arrivals
         public async Task<IActionResult> Index()
         {
@@ -25,6 +27,7 @@ namespace Pharmacy.Controllers
             return View(await pharmacyContext.ToListAsync());
         }
 
+        [Authorize(Roles = "user, admin")]
         // GET: Arrivals/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -45,6 +48,7 @@ namespace Pharmacy.Controllers
             return View(arrival);
         }
 
+        [Authorize(Roles = "user, admin")]
         // GET: Arrivals/Create
         public IActionResult Create()
         {
@@ -57,6 +61,7 @@ namespace Pharmacy.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "user, admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ArrivalId,MedicamentId,ReceiptDate,Count,DeliverId,PurchasePrice")] Arrival arrival)
         {
@@ -71,6 +76,7 @@ namespace Pharmacy.Controllers
             return View(arrival);
         }
 
+        [Authorize(Roles = "admin")]
         // GET: Arrivals/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -93,6 +99,7 @@ namespace Pharmacy.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ArrivalId,MedicamentId,ReceiptDate,Count,DeliverId,PurchasePrice")] Arrival arrival)
         {
@@ -126,6 +133,7 @@ namespace Pharmacy.Controllers
             return View(arrival);
         }
 
+        [Authorize(Roles = "admin")]
         // GET: Arrivals/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -146,6 +154,7 @@ namespace Pharmacy.Controllers
             return View(arrival);
         }
 
+        [Authorize(Roles = "admin")]
         // POST: Arrivals/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

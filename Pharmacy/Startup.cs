@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Pharmacy
 {
@@ -25,6 +26,16 @@ namespace Pharmacy
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<PharmacyContext>(options => options.UseSqlServer(connection));
             services.AddMvc();
+
+            // установка конфигурации подключения
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => //CookieAuthenticationOptions
+                {
+                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Users/Login");
+                });
+
+            services.AddMvc();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +45,8 @@ namespace Pharmacy
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
+                app.UseSession();
+                app.UseAuthentication();
             }
             else
             {
@@ -46,7 +59,7 @@ namespace Pharmacy
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Medicaments}/{action=Index}/{id?}");
+                    template: "{controller=Users}/{action=Index}/{id?}");
             });
         }
     }

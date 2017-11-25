@@ -10,17 +10,16 @@ namespace Pharmacy
         public virtual DbSet<Delivers> Delivers { get; set; }
         public virtual DbSet<Expence> Expence { get; set; }
         public virtual DbSet<Medicaments> Medicaments { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         public PharmacyContext(DbContextOptions<PharmacyContext> options): base(options)
         {
-
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=Pharmacy;Trusted_Connection=True;");
             }
         }
@@ -141,6 +140,29 @@ namespace Pharmacy
                 entity.Property(e => e.Units)
                     .IsRequired()
                     .HasColumnName("units")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Users>(entity =>
+            {
+                entity.HasKey(e => e.UserId);
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IsAdmin).HasColumnName("isAdmin");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Surname)
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });

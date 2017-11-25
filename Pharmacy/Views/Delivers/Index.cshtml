@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Pharmacy.Delivers>
+﻿@model IndexViewModel
+@addTagHelper "*, Pharmacy"
 
 @{
     ViewData["Title"] = "Index";
@@ -13,22 +14,22 @@
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Surname)
+                    Surname
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    Name
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Patronymic)
+                    Patronymic
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ContactPhone)
+                    ContactPhone
                 </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Deliver) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Surname)
@@ -51,3 +52,22 @@
 }
     </tbody>
 </table>
+<page-link page-model="Model.PageViewModel" page-action="Index"></page-link>
+@if (Model.PageViewModel.HasPreviousPage)
+{
+<a asp-action="Index"
+   asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+   class="btn btn-default btn">
+    <i class="glyphicon glyphicon-chevron-left"></i>
+    Назад
+</a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+<a asp-action="Index"
+   asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+   class="btn btn-default btn">
+    Вперед
+    <i class="glyphicon glyphicon-chevron-right"></i>
+</a>
+}

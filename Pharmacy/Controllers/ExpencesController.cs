@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pharmacy;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pharmacy.Controllers
 {
@@ -18,6 +19,7 @@ namespace Pharmacy.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "user, admin")]
         // GET: Expences
         public async Task<IActionResult> Index()
         {
@@ -25,6 +27,7 @@ namespace Pharmacy.Controllers
             return View(await pharmacyContext.ToListAsync());
         }
 
+        [Authorize(Roles = "user, admin")]
         // GET: Expences/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -44,6 +47,7 @@ namespace Pharmacy.Controllers
             return View(expence);
         }
 
+        [Authorize(Roles = "user, admin")]
         // GET: Expences/Create
         public IActionResult Create()
         {
@@ -51,6 +55,7 @@ namespace Pharmacy.Controllers
             return View();
         }
 
+        [Authorize(Roles = "user, admin")]
         // POST: Expences/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -68,6 +73,7 @@ namespace Pharmacy.Controllers
             return View(expence);
         }
 
+        [Authorize(Roles = "admin")]
         // GET: Expences/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -85,6 +91,7 @@ namespace Pharmacy.Controllers
             return View(expence);
         }
 
+        [Authorize(Roles = "admin")]
         // POST: Expences/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -121,6 +128,7 @@ namespace Pharmacy.Controllers
             return View(expence);
         }
 
+        [Authorize(Roles = "admin")]
         // GET: Expences/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -140,6 +148,7 @@ namespace Pharmacy.Controllers
             return View(expence);
         }
 
+        [Authorize(Roles = "admin")]
         // POST: Expences/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
