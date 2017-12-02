@@ -2,11 +2,28 @@
 @addTagHelper "*, Pharmacy"
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Delivers";
 }
 
 <h2>Delivers</h2>
+<form method="get">
+    <div class="form-inline">
+        <label class="control-label">Surname: </label>
+        @Html.TextBox("surname", Model.FilterViewModel.SelectedSurname, htmlAttributes: new { @class = "form-control" })
 
+        <label class="control-label">Name: </label>
+        @Html.TextBox("name", Model.FilterViewModel.SelectedName,
+                htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">Patronymic: </label>
+        @Html.TextBox("patronymic", Model.FilterViewModel.SelectedPatronymic, htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">ContactPhone: </label>
+        @Html.TextBox("contactPhone", Model.FilterViewModel.SelectedContactPhone, htmlAttributes: new { @class = "form-control" })
+
+        <input type="submit" value="Filter" class="btn btn-default" />
+    </div>
+</form>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -14,16 +31,36 @@
     <thead>
         <tr>
                 <th>
-                    Surname
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortViewModel.SurnameAscSort)"
+                       asp-route-surname="@(Model.FilterViewModel.SelectedSurname)"
+                       asp-route-name="@(Model.FilterViewModel.SelectedName)"
+                       asp-route-patronymic=" @(Model.FilterViewModel.SelectedPatronymic)"
+                       asp-route-contactPhone="@(Model.FilterViewModel.SelectedContactPhone)">Surname</a>
                 </th>
                 <th>
-                    Name
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortViewModel.NameAscSort)"
+                       asp-route-surname="@(Model.FilterViewModel.SelectedSurname)"
+                       asp-route-name="@(Model.FilterViewModel.SelectedName)"
+                       asp-route-patronymic=" @(Model.FilterViewModel.SelectedPatronymic)"
+                       asp-route-contactPhone="@(Model.FilterViewModel.SelectedContactPhone)">Name</a>
                 </th>
                 <th>
-                    Patronymic
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortViewModel.PatronymicAscSort)"
+                       asp-route-surname="@(Model.FilterViewModel.SelectedSurname)"
+                       asp-route-name="@(Model.FilterViewModel.SelectedName)"
+                       asp-route-patronymic=" @(Model.FilterViewModel.SelectedPatronymic)"
+                       asp-route-contactPhone="@(Model.FilterViewModel.SelectedContactPhone)">Patronymic</a>
                 </th>
                 <th>
-                    ContactPhone
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortViewModel.ContactPhoneAscSort)"
+                       asp-route-surname="@(Model.FilterViewModel.SelectedSurname)"
+                       asp-route-name="@(Model.FilterViewModel.SelectedName)"
+                       asp-route-patronymic=" @(Model.FilterViewModel.SelectedPatronymic)"
+                       asp-route-contactPhone="@(Model.FilterViewModel.SelectedContactPhone)">ContactPhone</a>
                 </th>
             <th></th>
         </tr>
@@ -57,6 +94,11 @@
 {
 <a asp-action="Index"
    asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+   asp-route-surname="@(Model.FilterViewModel.SelectedSurname)"
+   asp-route-name="@(Model.FilterViewModel.SelectedName)"
+   asp-route-patronymic=" @(Model.FilterViewModel.SelectedPatronymic)"
+   asp-route-contactPhone="@(Model.FilterViewModel.SelectedContactPhone)"
+   asp-route-sortorder="@(Model.SortViewModel.Current)"
    class="btn btn-default btn">
     <i class="glyphicon glyphicon-chevron-left"></i>
     Назад
@@ -66,6 +108,11 @@
 {
 <a asp-action="Index"
    asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+   asp-route-surname="@(Model.FilterViewModel.SelectedSurname)"
+   asp-route-name="@(Model.FilterViewModel.SelectedName)"
+   asp-route-patronymic=" @(Model.FilterViewModel.SelectedPatronymic)"
+   asp-route-contactPhone="@(Model.FilterViewModel.SelectedContactPhone)"
+   asp-route-sortorder="@(Model.SortViewModel.Current)"
    class="btn btn-default btn">
     Вперед
     <i class="glyphicon glyphicon-chevron-right"></i>

@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using Pharmacy.Models;
+using Pharmacy.ViewModels;
 
 namespace Pharmacy.Controllers
 {

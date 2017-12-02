@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pharmacy;
 using Microsoft.AspNetCore.Authorization;
+using Pharmacy.Models;
+using Pharmacy.ViewModels;
 
 namespace Pharmacy.Controllers
 {
@@ -21,16 +23,69 @@ namespace Pharmacy.Controllers
 
         [Authorize(Roles = "user, admin")]
         // GET: Delivers
-        public IActionResult Index(int page=1)
+        public IActionResult Index(string surname, string name, string patronymic, int? contactPhone, int page=1, DeliversSortState sortOrder = DeliversSortState.SurnameAsc)
         {
             int pageSize = 10;
-            var source = _context.Delivers;
+            IQueryable<Delivers> source = _context.Delivers;
+
+            if (surname != null)
+            {
+                source = source.Where(x => x.Surname.Contains(surname));
+            }
+            if (name != null)
+            {
+                source = source.Where(x => x.Name.Contains(name));
+            }
+            if (patronymic != null)
+            {
+                source = source.Where(x => x.Patronymic.Contains(patronymic));
+            }
+            if (contactPhone != null && contactPhone != 0)
+            {
+                source = source.Where(x => x.ContactPhone == contactPhone);
+            }
+
+            switch (sortOrder)
+            {
+                case DeliversSortState.SurnameAsc:
+                    source = source.OrderBy(x => x.Surname);
+                    break;
+                case DeliversSortState.SurnameIdDesc:
+                    source = source.OrderByDescending(x => x.Surname);
+                    break;
+                case DeliversSortState.NameAsc:
+                    source = source.OrderBy(x => x.Name);
+                    break;
+                case DeliversSortState.NameDesc:
+                    source = source.OrderByDescending(x => x.Name);
+                    break;
+                case DeliversSortState.PatronymicAsc:
+                    source = source.OrderBy(x => x.Patronymic);
+                    break;
+                case DeliversSortState.PatronymicDesc:
+                    source = source.OrderByDescending(x => x.Patronymic);
+                    break;
+                case DeliversSortState.ContactPhoneAsc:
+                    source = source.OrderBy(x => x.ContactPhone);
+                    break;
+                case DeliversSortState.ContactPhoneDesc:
+                    source = source.OrderByDescending(x => x.ContactPhone);
+                    break;
+                default:
+                    source = source.OrderBy(x => x.Surname);
+                    break;
+            }
+
+
+
             var count = source.Count();
-            var items = _context.Delivers.Skip((page - 1) * pageSize).Take(pageSize);
+            var items = source.Skip((page - 1) * pageSize).Take(pageSize);
             PageViewModel pageView = new PageViewModel(count, page, pageSize);
             IndexViewModel ivm = new IndexViewModel
             {
                 PageViewModel = pageView,
+                SortViewModel = new SortDeliversViewModel(sortOrder),
+                FilterViewModel = new FilterDeliversViewModel(surname, name, patronymic, contactPhone),
                 Deliver = items
             };
             return View(ivm);                        
