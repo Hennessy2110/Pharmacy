@@ -1,5 +1,3 @@
-using System;
-
 namespace Pharmacy.Models
 {
     public class ErrorViewModel

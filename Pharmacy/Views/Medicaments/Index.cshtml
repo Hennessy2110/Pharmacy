@@ -10,7 +10,8 @@
 <form method="get">
     <div class="form-inline">
         <label class="control-label">Name: </label>
-        @Html.TextBox("name", Model.FilterViewModel.SelectedName, htmlAttributes: new { @class = "form-control" })
+        @Html.TextBox("name", Model.FilterViewModel.SelectedName, 
+                htmlAttributes: new { @class = "form-control" })
 
         <label class="control-label">  Annotation: </label>
         @Html.TextBox("annotation", Model.FilterViewModel.SelectedAnnotation,

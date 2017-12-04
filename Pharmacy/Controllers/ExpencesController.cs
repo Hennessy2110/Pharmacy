@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Pharmacy;
 using Microsoft.AspNetCore.Authorization;
 using Pharmacy.Models;
 using Pharmacy.ViewModels;
+using System;
+using System.Globalization;
 
 namespace Pharmacy.Controllers
 {
@@ -23,7 +22,7 @@ namespace Pharmacy.Controllers
 
         [Authorize(Roles = "user, admin")]
         // GET: Expences
-        public IActionResult Index(int? medicamentId, string dateOfSale, int? counts, double? sellingPrice, int page = 1, ExpencesSortState sortOrder = ExpencesSortState.MedicamentIdAsc)
+        public IActionResult Index(int? medicamentId, string dateOfSale, int? counts, double? sellingPrice, string dateOfSaleFrom, string dateOfSaleTo, int page = 1, ExpencesSortState sortOrder = ExpencesSortState.MedicamentIdAsc)
         {
             int pageSize = 10;
             IQueryable<Expence> source = _context.Expence;
@@ -44,19 +43,35 @@ namespace Pharmacy.Controllers
             {
                 source = source.Where(x => x.SellingPrice == sellingPrice);
             }
+            if (dateOfSaleFrom != null && dateOfSaleTo != null)
+            {
+                source = source.Where(x => DateTime.ParseExact(x.DateOfSale, "dd/MM/yyyy", CultureInfo.InvariantCulture) > DateTime.ParseExact(dateOfSaleFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture) && DateTime.ParseExact(x.DateOfSale, "dd/MM/yyyy", CultureInfo.InvariantCulture) < DateTime.ParseExact(dateOfSaleTo, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+            }
 
             switch (sortOrder)
             {
                 case ExpencesSortState.MedicamentIdAsc:
                     source = source.OrderBy(x => x.MedicamentId);
                     break;
+                case ExpencesSortState.MedicamentIdDesc:
+                    source = source.OrderByDescending(x => x.MedicamentId);
+                    break;
                 case ExpencesSortState.DateOfSaleAsc:
+                    source = source.OrderBy(x => x.DateOfSale);
+                    break;
+                case ExpencesSortState.DateOfSaleDesc:
                     source = source.OrderByDescending(x => x.DateOfSale);
                     break;
                 case ExpencesSortState.CountAsc:
                     source = source.OrderBy(x => x.Count);
                     break;
+                case ExpencesSortState.CountDesc:
+                    source = source.OrderByDescending(x => x.Count);
+                    break;
                 case ExpencesSortState.SellingPriceAsc:
+                    source = source.OrderBy(x => x.SellingPrice);
+                    break;
+                case ExpencesSortState.SellingPriceDesc:
                     source = source.OrderByDescending(x => x.SellingPrice);
                     break;
                 default:
@@ -73,7 +88,7 @@ namespace Pharmacy.Controllers
             {
                 PageViewModel = pageView,
                 SortViewModel = new SortExpencesViewModel(sortOrder),
-                FilterViewModel = new FilterExpencesViewModel(medicamentId, dateOfSale, counts, sellingPrice),
+                FilterViewModel = new FilterExpencesViewModel(medicamentId, dateOfSale, counts, sellingPrice, dateOfSaleFrom, dateOfSaleTo),
                 Expences = items
             };
             return View(ivm);

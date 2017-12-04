@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Pharmacy
+﻿namespace Pharmacy
 {
     public partial class Expence
     {

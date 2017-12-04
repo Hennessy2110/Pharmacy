@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Pharmacy;
 using Microsoft.AspNetCore.Authorization;
 using Pharmacy.Models;
 using Pharmacy.ViewModels;
@@ -54,17 +50,32 @@ namespace Pharmacy.Controllers
                 case MedicamentsSortState.NameAsc:
                     source = source.OrderBy(x => x.Name);
                     break;
+                case MedicamentsSortState.NameDesc:
+                    source = source.OrderByDescending(x => x.Name);
+                    break;
                 case MedicamentsSortState.AnnotationAsc:
+                    source = source.OrderBy(x => x.Annotation);
+                    break;
+                case MedicamentsSortState.AnnotationDesc:
                     source = source.OrderByDescending(x => x.Annotation);
                     break;
                 case MedicamentsSortState.ProducerAsc:
                     source = source.OrderBy(x => x.Producer);
                     break;
+                case MedicamentsSortState.ProducerDesc:
+                    source = source.OrderByDescending(x => x.Producer);
+                    break;
                 case MedicamentsSortState.UnitsAsc:
+                    source = source.OrderBy(x => x.Units);
+                    break;
+                case MedicamentsSortState.UnitsDesc:
                     source = source.OrderByDescending(x => x.Units);
                     break;
                 case MedicamentsSortState.StorageAsc:
                     source = source.OrderBy(x => x.Storage);
+                    break;
+                case MedicamentsSortState.StorageDesc:
+                    source = source.OrderByDescending(x => x.Storage);
                     break;
                 default:
                     source = source.OrderBy(x => x.Name);

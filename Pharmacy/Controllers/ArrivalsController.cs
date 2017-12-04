@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Pharmacy;
 using Microsoft.AspNetCore.Authorization;
 using Pharmacy.Models;
 using Pharmacy.ViewModels;
@@ -86,7 +84,7 @@ namespace Pharmacy.Controllers
                     source = source.OrderByDescending(x => x.DeliverId);
                     break;
                 case ArrivalsSortState.PurchasePriceAsc:
-                    source = source.OrderByDescending(x => x.PurchasePrice);
+                    source = source.OrderBy(x => x.PurchasePrice);
                     break;
                 case ArrivalsSortState.PurchasePriceDesc:
                     source = source.OrderByDescending(x => x.PurchasePrice);

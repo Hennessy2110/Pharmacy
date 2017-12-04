@@ -19,8 +19,16 @@
         <label class="control-label">Count: </label>
         @Html.TextBox("counts", Model.FilterViewModel.SelectedCount, htmlAttributes: new { @class = "form-control" })
 
-        <label class="control-label">SellingPrice: </label>
+        <br><br><label class="control-label">SellingPrice: </label>
         @Html.TextBox("sellingPrice", Model.FilterViewModel.SelectedSellingPrice, htmlAttributes: new { @class = "form-control" })
+        
+        <label class="control-label">DateOfSaleFrom: </label>
+        @Html.TextBox("dateOfSaleFrom", Model.FilterViewModel.SelectedDateOfSaleFrom,
+                htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">DateOfSaleTo: </label>
+        @Html.TextBox("dateOfSaleTo", Model.FilterViewModel.SelectedDateOfSaleTo,
+                htmlAttributes: new { @class = "form-control" })
 
         <input type="submit" value="Filter" class="btn btn-default" style="margin-top:4px; height:50px; width:300px; color:black; border-color:black; background-color:greenyellow;" />
     </div>
@@ -63,7 +71,7 @@
                    asp-route-count=" @(Model.FilterViewModel.SelectedCount)"
                    asp-route-sellingPrice="@(Model.FilterViewModel.SelectedSellingPrice)">SellingPrice</a>
             </th>
-            <th></th>
+            <th>Sum</th>
         </tr>
     </thead>
     <tbody>
@@ -81,6 +89,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.SellingPrice)
             </td>
+            <td>@(item.Count*item.SellingPrice)</td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ExpenseId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ExpenseId">Details</a> |
