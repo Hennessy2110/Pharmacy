@@ -1,11 +1,45 @@
-﻿@model IEnumerable<Pharmacy.Arrival>
+﻿@using Pharmacy.ViewModels;
+@model ArrivalsViewModel
+@addTagHelper "*, Pharmacy"
 
 @{
     ViewData["Title"] = "Arrival";
 }
 
 <h2>Arrivals</h2>
+<form method="get">
+    <div class="form-inline">
+        <label class="control-label">MedicamentId: </label>
+        @Html.TextBox("medicamentId", Model.FilterViewModel.SelectedMedicamentId, htmlAttributes: new { @class = "form-control" })
 
+        <label class="control-label">  ReceiptDate: </label>
+        @Html.TextBox("receiptDate", Model.FilterViewModel.SelectedReceiptDate,
+                htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">  ReceiptDateFrom: </label>
+        @Html.TextBox("receiptDateFrom", Model.FilterViewModel.SelectedReceiptDateFrom,
+                htmlAttributes: new { @class = "form-control" })
+
+        <br><br><label class="control-label">ReceiptDateTo: </label>
+        @Html.TextBox("receiptDateTo", Model.FilterViewModel.SelectedReceiptDateTo,
+                htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">Count: </label>
+        @Html.TextBox("counts", Model.FilterViewModel.SelectedCount, htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">DeliverId: </label>
+        @Html.TextBox("deliverId", Model.FilterViewModel.SelectedDeliverId, htmlAttributes: new { @class = "form-control" })
+
+        <br><br><label class="control-label">PurchasePrice: </label>
+        @Html.TextBox("purchasePrice", Model.FilterViewModel.SelectedPurchasePrice, htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">Producer: </label>
+        @Html.TextBox("producer", Model.FilterViewModel.SelectedProducer,
+                htmlAttributes: new { @class = "form-control" })
+
+        <input type="submit" value="Filter" class="btn btn-default" style="margin-top:4px; height:50px; width:300px; color: black;  border-color:black; background-color:greenyellow;" />
+    </div>
+</form>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -13,26 +47,59 @@
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.ReceiptDate)
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortViewModel.MedicamentIdAscSort)"
+                       asp-route-medicamentId="@(Model.FilterViewModel.SelectedMedicamentId)"
+                       asp-route-receiptDate="@(Model.FilterViewModel.SelectedReceiptDate)"
+                       asp-route-count="@(Model.FilterViewModel.SelectedCount)"
+                       asp-route-deliverId=" @(Model.FilterViewModel.SelectedDeliverId)"
+                       asp-route-purchasePrice="@(Model.FilterViewModel.SelectedPurchasePrice)">MedicamentId</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Count)
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortViewModel.ReceiptDateAscSort)"
+                       asp-route-medicamentId="@(Model.FilterViewModel.SelectedMedicamentId)"
+                       asp-route-receiptDate="@(Model.FilterViewModel.SelectedReceiptDate)"
+                       asp-route-count="@(Model.FilterViewModel.SelectedCount)"
+                       asp-route-deliverId=" @(Model.FilterViewModel.SelectedDeliverId)"
+                       asp-route-purchasePrice="@(Model.FilterViewModel.SelectedPurchasePrice)">ReceiptDate</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.PurchasePrice)
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortViewModel.CountAscSort)"
+                       asp-route-medicamentId="@(Model.FilterViewModel.SelectedMedicamentId)"
+                       asp-route-receiptDate="@(Model.FilterViewModel.SelectedReceiptDate)"
+                       asp-route-count="@(Model.FilterViewModel.SelectedCount)"
+                       asp-route-deliverId=" @(Model.FilterViewModel.SelectedDeliverId)"
+                       asp-route-purchasePrice="@(Model.FilterViewModel.SelectedPurchasePrice)">Count</a>
                 </th>
             <th>
-                @Html.DisplayNameFor(model => model.Deliver)
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.DeliverIdAscSort)"
+                   asp-route-medicamentId="@(Model.FilterViewModel.SelectedMedicamentId)"
+                   asp-route-receiptDate="@(Model.FilterViewModel.SelectedReceiptDate)"
+                   asp-route-count="@(Model.FilterViewModel.SelectedCount)"
+                   asp-route-deliverId=" @(Model.FilterViewModel.SelectedDeliverId)"
+                   asp-route-purchasePrice="@(Model.FilterViewModel.SelectedPurchasePrice)">DeliverId</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Medicament)
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.PurchasePriceAscSort)"
+                   asp-route-medicamentId="@(Model.FilterViewModel.SelectedMedicamentId)"
+                   asp-route-receiptDate="@(Model.FilterViewModel.SelectedReceiptDate)"
+                   asp-route-count="@(Model.FilterViewModel.SelectedCount)"
+                   asp-route-deliverId=" @(Model.FilterViewModel.SelectedDeliverId)"
+                   asp-route-purchasePrice="@(Model.FilterViewModel.SelectedPurchasePrice)">PurchasePrice</a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Arrival) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MedicamentId)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ReceiptDate)
             </td>
@@ -40,13 +107,10 @@
                 @Html.DisplayFor(modelItem => item.Count)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.DeliverId)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.PurchasePrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Deliver.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Medicament.Annotation)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ArrivalId">Edit</a> |
@@ -57,3 +121,34 @@
 }
     </tbody>
 </table>
+<page-link page-model="Model.PageViewModel" page-action="Index"></page-link>
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+       asp-route-medicamentId="@(Model.FilterViewModel.SelectedMedicamentId)"
+       asp-route-receiptDate="@(Model.FilterViewModel.SelectedReceiptDate)"
+       asp-route-count=" @(Model.FilterViewModel.SelectedCount)"
+       asp-route-deliverId="@(Model.FilterViewModel.SelectedDeliverId)"
+       asp-route-purchasePrice="@(Model.FilterViewModel.SelectedPurchasePrice)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-default btn">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+       asp-route-medicamentId="@(Model.FilterViewModel.SelectedMedicamentId)"
+       asp-route-receiptDate="@(Model.FilterViewModel.SelectedReceiptDate)"
+       asp-route-count=" @(Model.FilterViewModel.SelectedCount)"
+       asp-route-deliverId="@(Model.FilterViewModel.SelectedDeliverId)"
+       asp-route-purchasePrice="@(Model.FilterViewModel.SelectedPurchasePrice)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-default btn">
+        Вперед
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+}

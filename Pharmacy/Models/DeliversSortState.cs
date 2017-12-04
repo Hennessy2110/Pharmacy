@@ -8,7 +8,7 @@ namespace Pharmacy.Models
     public enum DeliversSortState
     {
         SurnameAsc,
-        SurnameIdDesc,
+        SurnameDesc,
         NameAsc,
         NameDesc,
         PatronymicAsc,

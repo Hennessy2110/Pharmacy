@@ -50,7 +50,7 @@ namespace Pharmacy.Controllers
                 case DeliversSortState.SurnameAsc:
                     source = source.OrderBy(x => x.Surname);
                     break;
-                case DeliversSortState.SurnameIdDesc:
+                case DeliversSortState.SurnameDesc:
                     source = source.OrderByDescending(x => x.Surname);
                     break;
                 case DeliversSortState.NameAsc:

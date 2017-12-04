@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pharmacy;
 using Microsoft.AspNetCore.Authorization;
+using Pharmacy.Models;
+using Pharmacy.ViewModels;
 
 namespace Pharmacy.Controllers
 {
@@ -21,10 +23,60 @@ namespace Pharmacy.Controllers
 
         [Authorize(Roles = "user, admin")]
         // GET: Expences
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int? medicamentId, string dateOfSale, int? counts, double? sellingPrice, int page = 1, ExpencesSortState sortOrder = ExpencesSortState.MedicamentIdAsc)
         {
-            var pharmacyContext = _context.Expence.Include(e => e.Medicament);
-            return View(await pharmacyContext.ToListAsync());
+            int pageSize = 10;
+            IQueryable<Expence> source = _context.Expence;
+
+            if (medicamentId != null && medicamentId != 0)
+            {
+                source = source.Where(x => x.MedicamentId == medicamentId);
+            }
+            if (dateOfSale != null)
+            {
+                source = source.Where(x => x.DateOfSale.Contains(dateOfSale));
+            }
+            if (counts != null && counts != 0)
+            {
+                source = source.Where(x => x.Count == counts);
+            }
+            if (sellingPrice != null)
+            {
+                source = source.Where(x => x.SellingPrice == sellingPrice);
+            }
+
+            switch (sortOrder)
+            {
+                case ExpencesSortState.MedicamentIdAsc:
+                    source = source.OrderBy(x => x.MedicamentId);
+                    break;
+                case ExpencesSortState.DateOfSaleAsc:
+                    source = source.OrderByDescending(x => x.DateOfSale);
+                    break;
+                case ExpencesSortState.CountAsc:
+                    source = source.OrderBy(x => x.Count);
+                    break;
+                case ExpencesSortState.SellingPriceAsc:
+                    source = source.OrderByDescending(x => x.SellingPrice);
+                    break;
+                default:
+                    source = source.OrderBy(x => x.MedicamentId);
+                    break;
+            }
+
+
+
+            var count = source.Count();
+            var items = source.Skip((page - 1) * pageSize).Take(pageSize);
+            PageViewModel pageView = new PageViewModel(count, page, pageSize);
+            ExpencesViewModel ivm = new ExpencesViewModel
+            {
+                PageViewModel = pageView,
+                SortViewModel = new SortExpencesViewModel(sortOrder),
+                FilterViewModel = new FilterExpencesViewModel(medicamentId, dateOfSale, counts, sellingPrice),
+                Expences = items
+            };
+            return View(ivm);
         }
 
         [Authorize(Roles = "user, admin")]

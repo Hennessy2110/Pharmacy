@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pharmacy;
 using Microsoft.AspNetCore.Authorization;
+using Pharmacy.Models;
+using Pharmacy.ViewModels;
+using System.Globalization;
 
 namespace Pharmacy.Controllers
 {
@@ -21,10 +24,91 @@ namespace Pharmacy.Controllers
 
         [Authorize(Roles = "user, admin")]
         // GET: Arrivals
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int? medicamentId, string receiptDate, string receiptDateFrom, string receiptDateTo, int? counts, int? deliverId, double? purchasePrice, string producer, int page = 1, ArrivalsSortState sortOrder = ArrivalsSortState.MedicamentIdAsc)
         {
-            var pharmacyContext = _context.Arrival.Include(a => a.Deliver).Include(a => a.Medicament);
-            return View(await pharmacyContext.ToListAsync());
+            int pageSize = 10;
+            IQueryable<Arrival> source = _context.Arrival;
+
+            if (medicamentId != null && medicamentId != 0)
+            {
+                source = source.Where(x => x.MedicamentId == medicamentId);
+            }
+            if (receiptDate != null)
+            {
+                source = source.Where(x => x.ReceiptDate.Contains(receiptDate));
+            }
+            if (receiptDateFrom != null && receiptDateTo != null)
+            {
+                source = source.Where(x => DateTime.ParseExact(x.ReceiptDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) > DateTime.ParseExact(receiptDateFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture) && DateTime.ParseExact(x.ReceiptDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) < DateTime.ParseExact(receiptDateTo, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+            }
+            
+            if (counts != null && counts != 0)
+            {
+                source = source.Where(x => x.Count == counts);
+            }
+            if (deliverId != null && deliverId != 0)
+            {
+                source = source.Where(x => x.DeliverId == deliverId);
+            }
+            if (purchasePrice != null && purchasePrice != 0)
+            {
+                source = source.Where(x => x.PurchasePrice == purchasePrice);
+            }
+            if (producer != null)
+            {
+                source = source.Where(x => x.Medicament.Producer.Contains(producer));
+            }
+
+            switch (sortOrder)
+            {
+                case ArrivalsSortState.MedicamentIdAsc:
+                    source = source.OrderBy(x => x.MedicamentId);
+                    break;
+                case ArrivalsSortState.MedicamentIdDesc:
+                    source = source.OrderByDescending(x => x.MedicamentId);
+                    break;
+                case ArrivalsSortState.ReceiptDateAsc:
+                    source = source.OrderBy(x => x.ReceiptDate);
+                    break;
+                case ArrivalsSortState.ReceiptDateDesc:
+                    source = source.OrderByDescending(x => x.ReceiptDate);
+                    break;
+                case ArrivalsSortState.CountAsc:
+                    source = source.OrderBy(x => x.Count);
+                    break;
+                case ArrivalsSortState.CountDesc:
+                    source = source.OrderByDescending(x => x.Count);
+                    break;
+                case ArrivalsSortState.DeliverIdAsc:
+                    source = source.OrderBy(x => x.DeliverId);
+                    break;
+                case ArrivalsSortState.DeliverIdDesc:
+                    source = source.OrderByDescending(x => x.DeliverId);
+                    break;
+                case ArrivalsSortState.PurchasePriceAsc:
+                    source = source.OrderByDescending(x => x.PurchasePrice);
+                    break;
+                case ArrivalsSortState.PurchasePriceDesc:
+                    source = source.OrderByDescending(x => x.PurchasePrice);
+                    break;
+                default:
+                    source = source.OrderBy(x => x.MedicamentId);
+                    break;
+            }
+
+
+
+            var count = source.Count();
+            var items = source.Skip((page - 1) * pageSize).Take(pageSize);
+            PageViewModel pageView = new PageViewModel(count, page, pageSize);
+            ArrivalsViewModel ivm = new ArrivalsViewModel
+            {
+                PageViewModel = pageView,
+                SortViewModel = new SortArrivalsViewModel(sortOrder),
+                FilterViewModel = new FilterArrivalsViewModel(medicamentId, receiptDate, receiptDateFrom, receiptDateTo, counts, deliverId, purchasePrice, producer),
+                Arrival = items
+            };
+            return View(ivm);
         }
 
         [Authorize(Roles = "user, admin")]

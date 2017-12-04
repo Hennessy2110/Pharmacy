@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pharmacy;
 using Microsoft.AspNetCore.Authorization;
+using Pharmacy.Models;
+using Pharmacy.ViewModels;
 
 namespace Pharmacy.Controllers
 {
@@ -21,12 +23,69 @@ namespace Pharmacy.Controllers
 
         [Authorize(Roles = "user, admin")]
         // GET: Medicaments
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string name, string annotation, string producer, string units, string storage, int page = 1, MedicamentsSortState sortOrder = MedicamentsSortState.NameAsc)
         {
-            return View(await _context.Medicaments.ToListAsync());
+            int pageSize = 10;
+            IQueryable<Medicaments> source = _context.Medicaments;
+
+            if (name != null)
+            {
+                source = source.Where(x => x.Name.Contains(name));
+            }
+            if (annotation != null)
+            {
+                source = source.Where(x => x.Annotation.Contains(annotation));
+            }
+            if (producer != null)
+            {
+                source = source.Where(x => x.Producer.Contains(producer));
+            }
+            if (units != null)
+            {
+                source = source.Where(x => x.Units.Contains(units));
+            }
+            if (storage != null)
+            {
+                source = source.Where(x => x.Storage.Contains(storage));
+            }
+
+            switch (sortOrder)
+            {
+                case MedicamentsSortState.NameAsc:
+                    source = source.OrderBy(x => x.Name);
+                    break;
+                case MedicamentsSortState.AnnotationAsc:
+                    source = source.OrderByDescending(x => x.Annotation);
+                    break;
+                case MedicamentsSortState.ProducerAsc:
+                    source = source.OrderBy(x => x.Producer);
+                    break;
+                case MedicamentsSortState.UnitsAsc:
+                    source = source.OrderByDescending(x => x.Units);
+                    break;
+                case MedicamentsSortState.StorageAsc:
+                    source = source.OrderBy(x => x.Storage);
+                    break;
+                default:
+                    source = source.OrderBy(x => x.Name);
+                    break;
+            }
+
+
+
+            var count = source.Count();
+            var items = source.Skip((page - 1) * pageSize).Take(pageSize);
+            PageViewModel pageView = new PageViewModel(count, page, pageSize);
+            MedicamentsViewModel ivm = new MedicamentsViewModel
+            {
+                PageViewModel = pageView,
+                SortViewModel = new SortMedicamentsViewModel(sortOrder),
+                FilterViewModel = new FilterMedicamentsViewModel(name, annotation, producer, units, storage),
+                Medicaments = items
+            };
+            return View(ivm);
         }
 
-        [Authorize(Roles = "user, admin")]
         // GET: Medicaments/Details/5
         public async Task<IActionResult> Details(int? id)
         {

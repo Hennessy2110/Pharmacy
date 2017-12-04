@@ -16,7 +16,7 @@ namespace Pharmacy.ViewModels
 
         public SortDeliversViewModel(DeliversSortState sortOrder)
         {
-            SurnameAscSort = sortOrder == DeliversSortState.SurnameAsc ? DeliversSortState.SurnameIdDesc : DeliversSortState.SurnameAsc;
+            SurnameAscSort = sortOrder == DeliversSortState.SurnameAsc ? DeliversSortState.SurnameDesc : DeliversSortState.SurnameAsc;
             NameAscSort = sortOrder == DeliversSortState.NameAsc ? DeliversSortState.NameDesc : DeliversSortState.NameAsc;
             PatronymicAscSort = sortOrder == DeliversSortState.PatronymicAsc ? DeliversSortState.PatronymicDesc : DeliversSortState.PatronymicAsc;
             ContactPhoneAscSort = sortOrder == DeliversSortState.ContactPhoneAsc ? DeliversSortState.ContactPhoneDesc : DeliversSortState.ContactPhoneAsc;
